@@ -30,14 +30,13 @@ void jogar (char jogador_X[], char jogador_O[], char mat[3][3]) {
         //arrumar
 
         while (mat[linha][coluna] != ' ') {
+
             if (linha < 0 || linha > 2 || coluna < 0 || coluna > 2) {
-                printf("Linha e coluna devem ser entre 0 e 2. Informe nova posição!.\n");
+                printf("Linha e coluna devem ser entre 0 e 2. Informe nova linha e coluna!.\n");
+
+                scanf("%d", &linha);
+                scanf("%d", &coluna);
             }
-
-            printf("Posição linha %d e coluna %d já ocupada. Informe nova posição!.\n", linha, coluna);
-
-            scanf("%d", &linha);
-            scanf("%d", &coluna);
 
         }
 
@@ -84,17 +83,15 @@ void jogar (char jogador_X[], char jogador_O[], char mat[3][3]) {
 
         scanf("%d", &coluna);
 
-        //arrumar
-
         while (mat[linha][coluna] != ' ') {
+
             if (linha < 0 || linha > 2 || coluna < 0 || coluna > 2) {
-                printf("Linha e coluna devem ser entre 0 e 2. Informe nova posição!.\n");
+                printf("Linha e coluna devem ser entre 0 e 2. Informe nova linha e coluna!.\n");
+
+                scanf("%d", &linha);
+                scanf("%d", &coluna);
             }
 
-            printf("Posição linha %d e coluna %d já ocupada. Informe nova posição!.\n", linha, coluna);
-
-            scanf("%d", &linha);
-            scanf("%d", &coluna);
         }
 
         mat[linha][coluna] = 'O';
@@ -170,6 +167,8 @@ int main() {
 
         char resposta = '\0';
         char mesma_partida = '\0';
+
+        // lógica para o usuário poder jogar de novo e escolher se quer os mesmos jogadores ou não
 
         do {
 
