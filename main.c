@@ -27,7 +27,7 @@ void jogar (char jogador_X[], char jogador_O[], char mat[3][3]) {
         printf("%s, informe coluna: \n", jogador_X);
         scanf("%d", &coluna);
 
-        //arrumar
+        // se o usuário estourar o limite da matriz ou escolher uma posição já ocupada, ele deve informar uma nova linha e coluna
 
         while (mat[linha][coluna] != ' ') {
 
