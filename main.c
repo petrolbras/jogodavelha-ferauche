@@ -1,9 +1,36 @@
 #include <stdio.h>
 #include <string.h>
+#include <locale.h>
+
+int venceu(char mat[3][3], char simbolo) {
+    // verificar se alguem venceu
+
+    if  ((mat[0][0] == simbolo && mat[0][1] == simbolo && mat[0][2] == simbolo) ||
+         (mat[1][0] == simbolo && mat[1][1] == simbolo && mat[1][2] == simbolo) ||
+         (mat[2][0] == simbolo && mat[2][1] == simbolo && mat[2][2] == simbolo) ||
+         (mat[0][0] == simbolo && mat[1][0] == simbolo && mat[2][0] == simbolo) ||
+         (mat[0][1] == simbolo && mat[1][1] == simbolo && mat[2][1] == simbolo) ||
+         (mat[0][2] == simbolo && mat[1][2] == simbolo && mat[2][2] == simbolo) ||
+         (mat[0][0] == simbolo && mat[1][1] == simbolo && mat[2][2] == simbolo) ||
+         (mat[0][2] == simbolo && mat[1][1] == simbolo && mat[2][0] == simbolo)) {
+
+        return 1;
+    }
+
+    return 0;
+}
+
+void mostrar_tabuleiro(char mat[3][3]) {
+    printf("\n %c | %c | %c\n", mat[0][0], mat[0][1], mat[0][2]);
+    printf("-----------\n");
+    printf(" %c | %c | %c\n", mat[1][0], mat[1][1], mat[1][2]);
+    printf("-----------\n");
+    printf(" %c | %c | %c\n", mat[2][0], mat[2][1], mat[2][2]);
+}
 
 void jogar (char jogador_X[], char jogador_O[], char mat[3][3]) {
     
-    char vencedor[100] = "";
+    char vencedor = '\0';
     int i, j;
 
     // inicialização do jogo da velha
@@ -14,125 +41,144 @@ void jogar (char jogador_X[], char jogador_O[], char mat[3][3]) {
         }
     }
 
-    while(vencedor[0] == '\0') {
+    while(vencedor == '\0') {
         // jogador X
 
         int linha, coluna;
 
-        printf("Vez de %s:\n", jogador_X);
-
-        printf("%s, informe linha: \n", jogador_X);
-        scanf("%d", &linha);
-
-        printf("%s, informe coluna: \n", jogador_X);
-        scanf("%d", &coluna);
-
         // se o usuário estourar o limite da matriz ou escolher uma posição já ocupada, ele deve informar uma nova linha e coluna
 
-        while (mat[linha][coluna] != ' ') {
+        do {
 
-            if (linha < 0 || linha > 2 || coluna < 0 || coluna > 2) {
-                printf("Linha e coluna devem ser entre 0 e 2. Informe nova linha e coluna!.\n");
+            printf("\n\033[34mVez de %s: \033[0m\n", jogador_X);
 
-                scanf("%d", &linha);
-                scanf("%d", &coluna);
+            printf("\033[1m%s\033[0m, informe linha: \n", jogador_X);
+
+            if (scanf("%d", &linha) != 1) {
+                printf("\033[1;31m[ Digite um número válido! ] \033[0m\n");
+
+                // limpeza do buffer
+
+                while (getchar() != '\n');
+
+                continue;
             }
 
-        }
+            printf("\033[1m%s\033[0m, informe coluna: \n", jogador_X);
+
+            if (scanf("%d", &coluna) != 1) {
+                printf("\033[1;31m[ Digite um número válido! ] \033[0m\n");
+
+                // limpeza do buffer
+
+                while (getchar() != '\n');
+
+                continue;
+            }
+
+            if (linha < 0 || linha > 2 || coluna < 0 || coluna > 2) {
+                printf("\033[1;31m[ Linha e coluna devem ser entre 0 e 2. Informe nova linha e coluna! ] \033[0m\n");
+            } else if (mat[linha][coluna] != ' ') {
+                printf("\033[1;31m[ Essa posição já está ocupada. Informe nova linha e coluna! ] \033[0m\n");
+            } else {
+                break;
+            }
+        } while(1);
 
         mat[linha][coluna] = 'X';
 
         // verificar se o jogador X venceu
 
-        if  ((mat[0][0] == 'X' && mat[0][1] == 'X' && mat[0][2] == 'X') ||
-            (mat[1][0] == 'X' && mat[1][1] == 'X' && mat[1][2] == 'X') ||
-            (mat[2][0] == 'X' && mat[2][1] == 'X' && mat[2][2] == 'X') ||
-            (mat[0][0] == 'X' && mat[1][0] == 'X' && mat[2][0] == 'X') ||
-            (mat[0][1] == 'X' && mat[1][1] == 'X' && mat[2][1] == 'X') ||
-            (mat[0][2] == 'X' && mat[1][2] == 'X' && mat[2][2] == 'X') ||
-            (mat[0][0] == 'X' && mat[1][1] == 'X' && mat[2][2] == 'X') ||
-            (mat[0][2] == 'X' && mat[1][1] == 'X' && mat[2][0] == 'X')) {
-            printf("Parabéns, %s você venceu.\n", jogador_X);
+        if (venceu(mat, 'X')) {
 
-            printf(" %c | %c | %c\n", mat[0][0], mat[0][1], mat[0][2]);
-            printf("----------\n");
-            printf(" %c | %c | %c\n", mat[1][0], mat[1][1], mat[1][2]);
-            printf("----------\n");
-            printf(" %c | %c | %c\n", mat[2][0], mat[2][1], mat[2][2]);
+            printf("\033[35mParabéns, %s você venceu. \033[0m\n", jogador_X);
 
+            mostrar_tabuleiro(mat);
 
-            vencedor[0] = 'X';
             break;
         }
 
-        printf(" %c | %c | %c\n", mat[0][0], mat[0][1], mat[0][2]);
-        printf("----------\n");
-        printf(" %c | %c | %c\n", mat[1][0], mat[1][1], mat[1][2]);
-        printf("----------\n");
-        printf(" %c | %c | %c\n", mat[2][0], mat[2][1], mat[2][2]);
+        // verificar empate
+
+        if (mat[0][0] != ' ' && mat[0][1] != ' ' && mat[0][2] != ' ' &&
+            mat[1][0] != ' ' && mat[1][1] != ' ' && mat[1][2] != ' ' &&
+            mat[2][0] != ' ' && mat[2][1] != ' ' && mat[2][2] != ' ') {
+            vencedor = 'E';
+
+            mostrar_tabuleiro(mat);
+
+            printf("\x1b[33m%s e %s empataram.\033[0m\n", jogador_X, jogador_O);
+            break;
+        }
+
+        mostrar_tabuleiro(mat);
 
         // jogador O
 
-        printf("Vez de %s:\n", jogador_O);
+        do {
 
-        printf("%s, informe linha: \n", jogador_O, linha);
+            printf("\n\033[38;5;208mVez de: %s\033[0m\n", jogador_O);
 
-        scanf("%d", &linha);
+            printf("\033[1m%s\033[0m, informe linha: \n", jogador_O);
 
-        printf("%s, informe coluna: \n", jogador_O, coluna);
+            if (scanf("%d", &linha) != 1) {
+                printf("\033[1;31m[ Digite um número válido! ] \033[0m\n");
 
-        scanf("%d", &coluna);
+                // limpeza do buffer
 
-        while (mat[linha][coluna] != ' ') {
+                while (getchar() != '\n');
 
-            if (linha < 0 || linha > 2 || coluna < 0 || coluna > 2) {
-                printf("Linha e coluna devem ser entre 0 e 2. Informe nova linha e coluna!.\n");
-
-                scanf("%d", &linha);
-                scanf("%d", &coluna);
+                continue;
             }
 
-        }
+            printf("\033[1m%s\033[0m, informe coluna: \n", jogador_O);
+
+            if (scanf("%d", &coluna) != 1) {
+                printf("\033[1;31m[ Digite um número válido! ] \033[0m\n");
+
+                // limpeza do buffer
+
+                while (getchar() != '\n');
+
+                continue;
+            }
+
+            if (linha < 0 || linha > 2 || coluna < 0 || coluna > 2) {
+                printf("\033[1;31m[ Linha e coluna devem ser entre 0 e 2. Informe nova linha e coluna! ] \033[0m\n");
+            } else if (mat[linha][coluna] != ' ') {
+                printf("\033[1;31m[ Essa posição já está ocupada. Informe nova linha e coluna! ] \033[0m\n");
+            } else {
+                break;
+            }
+        } while(1);
 
         mat[linha][coluna] = 'O';
 
         // verificar se o jogador O venceu
 
-        if ((mat[0][0] == 'O' && mat[0][1] == 'O' && mat[0][2] == 'O') ||
-            (mat[1][0] == 'O' && mat[1][1] == 'O' && mat[1][2] == 'O') ||
-            (mat[2][0] == 'O' && mat[2][1] == 'O' && mat[2][2] == 'O') ||
-            (mat[0][0] == 'O' && mat[1][0] == 'O' && mat[2][0] == 'O') ||
-            (mat[0][1] == 'O' && mat[1][1] == 'O' && mat[2][1] == 'O') ||
-            (mat[0][2] == 'O' && mat[1][2] == 'O' && mat[2][2] == 'O') ||
-            (mat[0][0] == 'O' && mat[1][1] == 'O' && mat[2][2] == 'O') ||
-            (mat[0][2] == 'O' && mat[1][1] == 'O' && mat[2][0] == 'O')) {
-            printf("Parabéns, %s você venceu.\n", jogador_O);
+        if (venceu(mat, 'O')) {
+            
+            printf("\033[35mParabéns, %s você venceu. \033[0m\n", jogador_O);
 
-            printf(" %c | %c | %c\n", mat[0][0], mat[0][1], mat[0][2]);
-            printf("----------\n");
-            printf(" %c | %c | %c\n", mat[1][0], mat[1][1], mat[1][2]);
-            printf("----------\n");
-            printf(" %c | %c | %c\n", mat[2][0], mat[2][1], mat[2][2]);
+            mostrar_tabuleiro(mat);
 
-
-            vencedor[0] = 'O';
             break;
         }
 
-        printf(" %c | %c | %c\n", mat[0][0], mat[0][1], mat[0][2]);
-        printf("----------\n");
-        printf(" %c | %c | %c\n", mat[1][0], mat[1][1], mat[1][2]);
-        printf("----------\n");
-        printf(" %c | %c | %c\n", mat[2][0], mat[2][1], mat[2][2]);
-
-        // caso de empate
+        // verificar empate
 
         if (mat[0][0] != ' ' && mat[0][1] != ' ' && mat[0][2] != ' ' &&
             mat[1][0] != ' ' && mat[1][1] != ' ' && mat[1][2] != ' ' &&
             mat[2][0] != ' ' && mat[2][1] != ' ' && mat[2][2] != ' ') {
-            printf("%s e %s empataram.\n", jogador_X, jogador_O);
+            vencedor = 'E';
+
+            mostrar_tabuleiro(mat);
+
+            printf("\x1b[33m%s e %s empataram.\033[0m\n", jogador_X, jogador_O);
             break;
         }
+
+        mostrar_tabuleiro(mat);
     }
 }
 
@@ -140,13 +186,13 @@ void perguntar_nomes(char jogador_X[100], char jogador_O[100], int tamanho) {
 
     // o strcspn é usado para remover o \n que o fgets coloca
 
-    printf("Digite o nome do jogador X:\n");
+    printf("\033[33mDigite o nome do jogador X:\033[0m\n");
 
     if (fgets(jogador_X, tamanho, stdin)) {
         jogador_X[strcspn(jogador_X, "\n")] = '\0'; 
     }
 
-    printf("Agora, digite o nome do jogador O:\n");
+    printf("\033[33mDigite o nome do jogador O:\033[0m\n");
 
     if (fgets(jogador_O, tamanho, stdin)) {
         jogador_O[strcspn(jogador_O, "\n")] = '\0'; 
@@ -154,6 +200,8 @@ void perguntar_nomes(char jogador_X[100], char jogador_O[100], int tamanho) {
 }
 
 int main() {
+
+    setlocale(LC_ALL, "");
 
     char jogador_X[100] = "";
     char jogador_O[100] = "";
