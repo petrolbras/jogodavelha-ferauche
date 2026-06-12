@@ -3,7 +3,7 @@
 #include <locale.h>
 
 int venceu(char mat[3][3], char simbolo) {
-    
+
     // verificar se alguem venceu
 
     if ((mat[0][0] == simbolo && mat[0][1] == simbolo && mat[0][2] == simbolo) ||
@@ -210,6 +210,8 @@ int main() {
 
             if (resposta != 'S' && resposta != 's' && resposta != 'N' && resposta != 'n') {
                 printf("Por favor responda S ou N.\n");
+
+                while (getchar() != '\n'); // descarta o restante da linha
             }
 
         } while (resposta != 'S' && resposta != 's' && resposta != 'N' && resposta != 'n');
@@ -226,6 +228,8 @@ int main() {
 
                 if (mesma_partida != 'S' && mesma_partida != 's' && mesma_partida != 'N' && mesma_partida != 'n') {
                     printf("Por favor responda S ou N.\n");
+
+                    while (getchar() != '\n'); // descarta o restante da linha
                 }
             } while (mesma_partida != 'S' && mesma_partida != 's' && mesma_partida != 'N' && mesma_partida != 'n');
         }
